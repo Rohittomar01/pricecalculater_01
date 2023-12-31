@@ -1,9 +1,7 @@
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
+   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 // import { Input } from "@/components/ui/input";
@@ -31,12 +29,11 @@ export default function Left() {
   const form = useForm();
   return (
     <div>
-      <div>Left</div>
-      <div>
-        <Card className="border-blue-500 ">
+          <div>
+        <Card>
           <CardHeader>
             <CardTitle>Fill Detail</CardTitle>
-            <CardDescription></CardDescription>
+            {/* <CardDescription></CardDescription> */}
           </CardHeader>
           <CardContent>
             <div>
@@ -55,14 +52,14 @@ export default function Left() {
                             </SelectTrigger>
                             <SelectContent>
                               <SelectGroup>
-                                <SelectItem value="apple">Apple</SelectItem>
-                                <SelectItem value="banana">Banana</SelectItem>
+                                <SelectItem value="apple">Row markup </SelectItem>
+                                <SelectItem value="banana">Delux Markup</SelectItem>
                                 <SelectItem value="blueberry">
-                                  Blueberry
+                                 Economy Markup
                                 </SelectItem>
-                                <SelectItem value="grapes">Grapes</SelectItem>
+                                <SelectItem value="grapes">Luxury Markup</SelectItem>
                                 <SelectItem value="pineapple">
-                                  Pineapple
+                                 Super Luxury
                                 </SelectItem>
                               </SelectGroup>
                             </SelectContent>

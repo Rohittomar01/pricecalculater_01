@@ -17,23 +17,23 @@ export default function Right() {
             <CardDescription></CardDescription>
           </CardHeader>
           <CardContent className="p-10">
-            <p className="mt-3">Land Price:</p>
+            <p className="mt-3">Land Price :</p>
             <Separator />
-            <p className="mt-3">Buliding Price:</p>
+            <p className="mt-3">Buliding Price :</p>
             <Separator />
-            <p className="mt-3 font-bold">Sub Total:</p>
+            <p className="mt-3 font-bold">Sub Total :</p>
             <Separator />
-            <p className="mt-3">Corner Charge:</p>
+            <p className="mt-3">Corner Charge :</p>
             <Separator />
-            <p className="mt-3">Facing Charge:</p>
+            <p className="mt-3">Facing Charge :</p>
             <Separator />
-            <p className="mt-3">Facing Charge:</p>
+            <p className="mt-3">Facing Charge :</p>
             <Separator />
-            <p className="mt-3">Filling Charge:</p>
+            <p className="mt-3">Filling Charge :</p>
             <Separator />
-            <p className="mt-3">Remotness Charge:</p>
+            <p className="mt-3">Remotness Charge :</p>
             <Separator /> 
-            <p className="mt-3 font-bold">Grand Total:</p>
+            <p className="mt-3 font-bold">Grand Total :</p>
 
           </CardContent>
         

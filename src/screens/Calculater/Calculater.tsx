@@ -14,6 +14,7 @@ export default function Calculater() {
       <div className="col-span-6 p-10 pl-1">
         <Right />
       </div>
+   
     </div>
   );
 }

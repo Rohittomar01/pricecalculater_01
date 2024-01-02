@@ -37,22 +37,27 @@ export default function Left() {
   const {
     register,
     handleSubmit,
-    watch,
+    // watch,
     setValue,
     formState: { errors },
   } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = (data) =>
+    console.log(data.selectfacing);
 
-  console.log(watch("company")); // watch input value by passing the name of it
+  // console.log(watch("company")); // watch input value by passing the name of it
 
-  const handleSelectChange = (selectedValue:String) => {
-    setValue('company', selectedValue);
-    setValue('branch', selectedValue);
-    setValue('cornerplot', selectedValue);
-    setValue('selectfacing', selectedValue);
-
+  const handleSelectCompany = (selectedValue: String) => {
+    setValue("company", selectedValue);
   };
-
+  const handleSelectBranch = (selectedValue: String) => {
+    setValue("branch", selectedValue);
+  };
+  const handleSelectCorner = (selectedValue: String) => {
+    setValue("cornerplot", selectedValue);
+  };
+  const handleSelectFacing = (selectedValue: String) => {
+    setValue("selectfacing", selectedValue);
+  };
   return (
     <div>
       <div>
@@ -67,11 +72,14 @@ export default function Left() {
                 {/* for company */}
                 <div>
                   <label>Company</label>
-                  <Select onValueChange={handleSelectChange} >
-                    <SelectTrigger {...register("company")} className="w-full">
-                      <SelectValue  placeholder="Select a fruit" />
+                  <Select
+                    onValueChange={handleSelectCompany}
+                    {...register("company", { required: true })}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a fruit" />
                     </SelectTrigger>
-                    <SelectContent >
+                    <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Company</SelectLabel>
                         <SelectItem value="apple">Apple</SelectItem>
@@ -82,37 +90,66 @@ export default function Left() {
                       </SelectGroup>
                     </SelectContent>
                   </Select>
+                  {errors.company && (
+                    <p className="text-red-400 text-sm" role="alert">
+                      {"fill this field"}
+                    </p>
+                  )}
                 </div>
                 {/* for model  */}
                 <div className="mt-2">
                   <label>Model</label>
                   <div className="flex">
-                    <Input
-                      type="text"
-                      {...register("TLand")}
-                      placeholder="Total land Area"
-                    />
-                    <Input
-                      type="text"
-                      {...register("TBulit")}
-                      placeholder="Total Bulit Up Area"
-                    />
-                    <Input
-                      type="text"
-                      {...register("NFloor")}
-                      placeholder="No's Of Floor"
-                    />
+                    <div className="w-full">
+                      <Input
+                        type="text"
+                        {...register("TLand", { required: true })}
+                        placeholder="Total land Area"
+                      />
+                      {errors.TLand && (
+                        <p className="text-red-400 text-sm" role="alert">
+                          {"fill this field"}
+                        </p>
+                      )}
+                    </div>
+                    <div className="w-full">
+                      <Input
+                        type="text"
+                        {...register("TBulit", { required: true })}
+                        placeholder="Total Bulit Up Area"
+                      />
+                      {errors.TBulit && (
+                        <p className="text-red-400 text-sm" role="alert">
+                          {"fill this field"}
+                        </p>
+                      )}
+                    </div>
+                    <div className="w-full">
+                      <Input
+                        type="text"
+                        {...register("NFloor", { required: true })}
+                        placeholder="No's Of Floor"
+                      />
+                      {errors.NFloor && (
+                        <p className="text-red-400 text-sm" role="alert">
+                          {"fill this field"}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
                 {/* for Branch */}
                 <div className="mt-2">
                   <label>Branch</label>
-                  <Select onValueChange={handleSelectChange}>
+                  <Select
+                    onValueChange={handleSelectBranch}
+                    {...register("branch", { required: true })}
+                  >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select a fruit" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectGroup {...register("branch")}>
+                      <SelectGroup>
                         <SelectLabel>Branch</SelectLabel>
                         <SelectItem value="apple">Remotness factor</SelectItem>
                         <SelectItem value="banana">
@@ -124,7 +161,13 @@ export default function Left() {
                       </SelectGroup>
                     </SelectContent>
                   </Select>
+                  {errors.branch && (
+                    <p className="text-red-400 text-sm" role="alert">
+                      {"fill this field"}
+                    </p>
+                  )}
                 </div>
+
                 {/* for project */}
                 <div>
                   <label>Project</label>
@@ -139,7 +182,7 @@ export default function Left() {
                         <div className="flex items-center space-x-2 mt-2">
                           <Checkbox
                             id="terms"
-                            {...register("LVSF")}
+                            {...register("LVSF", { required: true })}
                             value={2}
                           />
                           <label
@@ -153,7 +196,7 @@ export default function Left() {
                         <div className="flex items-center space-x-2 mt-2">
                           <Checkbox
                             id="terms"
-                            {...register("devcharge")}
+                            {...register("devcharge", { required: true })}
                             value={200}
                           />
                           <label
@@ -167,7 +210,7 @@ export default function Left() {
                         <div className="flex items-center space-x-2 mt-2">
                           <Checkbox
                             id="terms"
-                            {...register("legcharge")}
+                            {...register("legcharge", { required: true })}
                             value={200}
                           />
                           <label
@@ -181,7 +224,7 @@ export default function Left() {
                         <div className="flex items-center space-x-2 mt-2">
                           <Checkbox
                             id="terms"
-                            {...register("NSLR")}
+                            {...register("NSLR", { required: true })}
                             value={400}
                           />
                           <label
@@ -195,7 +238,7 @@ export default function Left() {
                         <div className="flex items-center space-x-2 mt-2">
                           <Checkbox
                             id="terms"
-                            {...register("facing_f")}
+                            {...register("facing_f", { required: true })}
                             value={200}
                           />
                           <label
@@ -209,7 +252,7 @@ export default function Left() {
                         <div className="flex items-center space-x-2 mt-2">
                           <Checkbox
                             id="terms"
-                            {...register("corner_f")}
+                            {...register("corner_f", { required: true })}
                             value={100}
                           />
                           <label
@@ -223,7 +266,7 @@ export default function Left() {
                         <div className="flex items-center space-x-2 mt-2">
                           <Checkbox
                             id="terms"
-                            {...register("project_m")}
+                            {...register("project_m", { required: true })}
                             value={400}
                           />
                           <label
@@ -239,21 +282,42 @@ export default function Left() {
                   <div className="mt-2">
                     <label></label>
                     <div className="flex">
-                      <Input
-                        type="text"
-                        {...register("CLRAPMV")}
-                        placeholder="Current Land rate As per...."
-                      />
-                      <Input
-                        type="text"
-                        {...register("adjustmentfactor")}
-                        placeholder="Adjustment Factor"
-                      />
-                      <Input
-                        type="text"
-                        {...register("fillingfactor")}
-                        placeholder="Filling Factor"
-                      />
+                      <div className="w-full">
+                        <Input
+                          type="text"
+                          {...register("CLRAPMV", { required: true })}
+                          placeholder="Current Land rate As per...."
+                        />
+                        {errors.CLRAPMV && (
+                          <p className="text-red-400 text-sm" role="alert">
+                            {"fill this field"}
+                          </p>
+                        )}
+                      </div>
+                      <div className="w-full">
+                        <Input
+                          type="text"
+                          {...register("adjustmentfactor", { required: true })}
+                          placeholder="Adjustment Factor"
+                        />
+                        {errors.adjustmentfactor && (
+                          <p className="text-red-400 text-sm" role="alert">
+                            {"fill this field"}
+                          </p>
+                        )}
+                      </div>
+                      <div className="w-full">
+                        <Input
+                          type="text"
+                          {...register("fillingfactor", { required: true })}
+                          placeholder="Filling Factor"
+                        />
+                        {errors.fillingfactor && (
+                          <p className="text-red-400 text-sm" role="alert">
+                            {"fill this field"}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -261,34 +325,54 @@ export default function Left() {
                 <div className="mt-2">
                   <label>Unit</label>
                   <div className="flex">
-                    <Select onValueChange={handleSelectChange}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select Corner Plot" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup {...register("cornerplot")}>
-                          <SelectLabel>Unit</SelectLabel>
-                          <SelectItem value={"yes"}>Yes</SelectItem>
-                          <SelectItem value={"No"}>No</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                    {/* for Facing */}
+                    <div>
+                      <Select
+                        onValueChange={handleSelectCorner}
+                        {...register("cornerplot", { required: true })}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select Corner Plot" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Select Corner Plot</SelectLabel>
+                            <SelectItem value={"yes"}>Yes</SelectItem>
+                            <SelectItem value={"No"}>No</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      {errors.cornerplot && (
+                        <p className="text-red-400 text-sm" role="alert">
+                          {"fill this field"}
+                        </p>
+                      )}
+                    </div>
 
-                    <Select onValueChange={handleSelectChange}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select Facing" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup {...register("selectfacing")}>
-                          <SelectLabel>Facing</SelectLabel>
-                          <SelectItem value="east">East</SelectItem>
-                          <SelectItem value="west">West</SelectItem>
-                          <SelectItem value="north">North</SelectItem>
-                          <SelectItem value="south">South</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+                    {/* for Facing */}
+                    <div>
+                      <Select
+                        onValueChange={handleSelectFacing}
+                        {...register("selectfacing", { required: true })}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select Facing" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Facing</SelectLabel>
+                            <SelectItem value="east">East</SelectItem>
+                            <SelectItem value="west">West</SelectItem>
+                            <SelectItem value="north">North</SelectItem>
+                            <SelectItem value="south">South</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      {errors.selectfacing && (
+                        <p className="text-red-400 text-sm" role="alert">
+                          {"fill this field"}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <Button className="mt-4" type="submit">

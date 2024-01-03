@@ -8,29 +8,37 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ZodType, z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useContext } from "react";
+import { FormContext } from "../Context/Context";
 
 type Inputs = {
-  company: String;
   email: string;
 };
 
 export default function App() {
+  const schema: ZodType<Inputs> = z.object({
+    email: z.string().min(2).max(20),
+  });
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<Inputs>();
+    // watch,
+    // formState: { errors },
+  } = useForm<Inputs>({ resolver: zodResolver(schema) });
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
-  console.log(watch("company")); // watch input value by passing the name of it
+  // console.log(watch("company")); // watch input value by passing the name of it
 
   return (
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
+      {/* <div>
         <Select>
           <SelectTrigger className="w-96">
             <SelectValue placeholder="Select a fruit" />
@@ -46,12 +54,10 @@ export default function App() {
             </SelectGroup>
           </SelectContent>
         </Select>
-      </div>
+      </div> */}
       <div>
         <label>Model</label>
         <div>
-          <Input type="text" {...register("email")} placeholder="Email" />
-          <Input type="text" {...register("email")} placeholder="Email" />
           <Input type="text" {...register("email")} placeholder="Email" />
         </div>
       </div>

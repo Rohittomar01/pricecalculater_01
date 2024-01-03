@@ -2,12 +2,17 @@ import {
   Card,
   CardContent,
   CardDescription,
-    CardHeader,
+  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useContext } from "react";
+import { FormContext } from "../Context/Context";
 
 export default function Right() {
+
+  const data=useContext(FormContext)
+
   return (
     <div>
       <div>
@@ -32,11 +37,9 @@ export default function Right() {
             <p className="mt-3">Filling Charge :</p>
             <Separator />
             <p className="mt-3">Remotness Charge :</p>
-            <Separator /> 
+            <Separator />
             <p className="mt-3 font-bold">Grand Total :</p>
-
           </CardContent>
-        
         </Card>
       </div>
     </div>

@@ -1,18 +1,15 @@
-// import './App.css'
-// import components
-import Calculater from './screens/Calculater/Calculater';
-
-
-
+import Calculater from "./screens/Calculater/Calculater";
+import { FormData } from "./screens/Context/Context";
 function App() {
-
   return (
     <>
-     <div>
-      <Calculater/>
-     </div>
+      <FormData>
+        <div>
+          <Calculater />
+        </div>
+      </FormData>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

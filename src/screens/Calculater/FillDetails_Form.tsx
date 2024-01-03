@@ -14,20 +14,23 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ZodType, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useContext, useState } from "react";
+// import { FormContext } from "../Context/Context";
+import { Separator } from "@/components/ui/separator";
 
 type Inputs = {
-  company: string;
+  company: number;
   total_land: number;
   total_built: number;
   no_of_floor: number;
   branch: string;
-  dev_charge: number;
-  legal_charge: number;
-  land_value_sell_factor: number;
-  net_selling_land_rate: number;
-  facing_factor: number;
-  corner_factor: number;
-  project_management: number;
+  dev_charge?: number;
+  legal_charge?: number;
+  land_value_sell_factor?: number;
+  net_selling_land_rate?: number;
+  facing_factor?: number;
+  corner_factor?: number;
+  project_management?: number;
   current_land_rate_asper_market: number;
   adjustmentfactor: number;
   fillingfactor: number;
@@ -36,14 +39,16 @@ type Inputs = {
 };
 
 export default function Left() {
-  
+  // const setData = useContext(FormContext);
+  const [FormData, setFormData] = useState<Inputs | null>(null);
+
   const schema: ZodType<Inputs> = z.object({
-    company: z.string().min(2).max(20),
+    company: z.number(),
     total_land: z.number().int().positive(),
     total_built: z.number().int().positive(),
     no_of_floor: z.number().int().positive(),
     branch: z.string().min(1).max(50),
-    dev_charge: z.number().int().positive(),
+    dev_charge: z.number().int().positive().optional(),
     legal_charge: z.number().int().positive(),
     land_value_sell_factor: z.number().int().positive(),
     net_selling_land_rate: z.number().int().positive(),
@@ -59,20 +64,59 @@ export default function Left() {
   const {
     register,
     handleSubmit,
-    watch,
+    // watch,
     setValue,
     formState: { errors },
   } = useForm<Inputs>({ resolver: zodResolver(schema) });
 
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    console.log(data);
+    setFormData(data);
+    // setData(data)
+  };
 
-  const onSubmit = (data:Inputs) =>{ console.log("data",data);
-  }
- 
-  console.log(watch("total_land"))
+  const Right: SubmitHandler<Inputs> = () => {
+    return (
+      <div>
+        {FormData !== null ? (
+          <>
+            <div>
+              <div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Result</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-10">
+                    <p className="mt-3">Land Price :</p>
+                    <Separator />
+                    <p className="mt-3">Buliding Price :</p>
+                    <Separator />
+                    <p className="mt-3 font-bold">Sub Total :</p>
+                    <Separator />
+                    <p className="mt-3">Corner Charge :</p>
+                    <Separator />
+                    <p className="mt-3">Facing Charge :</p>
+                    <Separator />
+                    <p className="mt-3">Facing Charge :</p>
+                    <Separator />
+                    <p className="mt-3">Filling Charge :</p>
+                    <Separator />
+                    <p className="mt-3">Remotness Charge :</p>
+                    <Separator />
+                    <p className="mt-3 font-bold">Grand Total :</p>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </>
+        ) : (
+          <p></p>
+        )}
+      </div>
+    );
+  };
 
-  ; // watch input value by passing the name of it
-
-  const handleSelectCompany = (selectedValue: string) => {
+  const handleSelectCompany = (selectedValue: number) => {
     setValue("company", selectedValue);
   };
   const handleSelectBranch = (selectedValue: string) => {
@@ -90,29 +134,28 @@ export default function Left() {
         <Card>
           <CardHeader>
             <CardTitle>Fill Detail</CardTitle>
-            {/* <CardDescription></CardDescription> */}
           </CardHeader>
           <CardContent>
             <div>
               <form onSubmit={handleSubmit(onSubmit)}>
                 {/* for company */}
                 <div>
-                  <label className=" mb-2">Company</label>
+                  <label className="mb-2">Company</label>
                   <Select
                     onValueChange={handleSelectCompany}
-                    {...register("company", { required: true })}
+                    {...register("company", { valueAsNumber: true })}
                   >
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select a fruit" />
+                      <SelectValue placeholder="Select A Company" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Company</SelectLabel>
-                        <SelectItem value="raw_markup">Raw Markup</SelectItem>
-                        <SelectItem value="economy_markup">
+                        <SelectItem value={1000}>Raw Markup</SelectItem>
+                        {/* <SelectItem value="economy_markup">
                           Economy Markup
-                        </SelectItem>
-                        <SelectItem value="deluxe_markup">
+                        </SelectItem> */}
+                        {/* <SelectItem value="deluxe_markup">
                           Deluxe Markup
                         </SelectItem>
                         <SelectItem value="superluxury_markup">
@@ -120,7 +163,7 @@ export default function Left() {
                         </SelectItem>
                         <SelectItem value="luxury_markup">
                           Luxury Markup
-                        </SelectItem>
+                        </SelectItem> */}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -219,9 +262,9 @@ export default function Left() {
                           <Checkbox
                             id="terms"
                             {...register("land_value_sell_factor", {
-                              required: true,
+                              valueAsNumber: true,
                             })}
-                            value={2}
+                            value={200}
                           />
                           <label
                             htmlFor="terms"
@@ -234,7 +277,7 @@ export default function Left() {
                         <div className="flex items-center space-x-2 mt-2">
                           <Checkbox
                             id="terms"
-                            {...register("dev_charge", { required: true })}
+                            {...register("dev_charge", { valueAsNumber: true })}
                             value={200}
                           />
                           <label
@@ -248,7 +291,9 @@ export default function Left() {
                         <div className="flex items-center space-x-2 mt-2">
                           <Checkbox
                             id="terms"
-                            {...register("legal_charge", { required: true })}
+                            {...register("legal_charge", {
+                              valueAsNumber: true,
+                            })}
                             value={200}
                           />
                           <label
@@ -263,7 +308,7 @@ export default function Left() {
                           <Checkbox
                             id="terms"
                             {...register("net_selling_land_rate", {
-                              required: true,
+                              valueAsNumber: true,
                             })}
                             value={400}
                           />
@@ -278,7 +323,9 @@ export default function Left() {
                         <div className="flex items-center space-x-2 mt-2">
                           <Checkbox
                             id="terms"
-                            {...register("facing_factor", { required: true })}
+                            {...register("facing_factor", {
+                              valueAsNumber: true,
+                            })}
                             value={200}
                           />
                           <label
@@ -292,7 +339,9 @@ export default function Left() {
                         <div className="flex items-center space-x-2 mt-2">
                           <Checkbox
                             id="terms"
-                            {...register("corner_factor", { required: true })}
+                            {...register("corner_factor", {
+                              valueAsNumber: true,
+                            })}
                             value={100}
                           />
                           <label
@@ -307,7 +356,7 @@ export default function Left() {
                           <Checkbox
                             id="terms"
                             {...register("project_management", {
-                              required: true,
+                              valueAsNumber: true,
                             })}
                             value={400}
                           />
@@ -423,10 +472,13 @@ export default function Left() {
                     </div>
                   </div>
                 </div>
-                <Button className="mt-4" type="submit">
+                <Button type="submit" className="mt-4">
                   Click Me
                 </Button>
               </form>
+              <div>
+                <Right />
+              </div>
             </div>
           </CardContent>
         </Card>

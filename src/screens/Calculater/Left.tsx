@@ -12,50 +12,76 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ZodType, z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type Inputs = {
-  company: String;
-  TLand: Number;
-  TBulit: Number;
-  NFloor: Number;
-  branch: String;
-  devcharge: Number;
-  legcharge: Number;
-  LVSF: Number;
-  NSLR: Number;
-  facing_f: Number;
-  corner_f: Number;
-  project_m: Number;
-  CLRAPMV: Number;
-  adjustmentfactor: Number;
-  fillingfactor: Number;
-  selectfacing: String;
-  cornerplot: String;
+  company: string;
+  total_land: number;
+  total_built: number;
+  no_of_floor: number;
+  branch: string;
+  dev_charge: number;
+  legal_charge: number;
+  land_value_sell_factor: number;
+  net_selling_land_rate: number;
+  facing_factor: number;
+  corner_factor: number;
+  project_management: number;
+  current_land_rate_asper_market: number;
+  adjustmentfactor: number;
+  fillingfactor: number;
+  selectfacing: string;
+  cornerplot: string;
 };
 
 export default function Left() {
+  
+  const schema: ZodType<Inputs> = z.object({
+    company: z.string().min(2).max(20),
+    total_land: z.number().int().positive(),
+    total_built: z.number().int().positive(),
+    no_of_floor: z.number().int().positive(),
+    branch: z.string().min(1).max(50),
+    dev_charge: z.number().int().positive(),
+    legal_charge: z.number().int().positive(),
+    land_value_sell_factor: z.number().int().positive(),
+    net_selling_land_rate: z.number().int().positive(),
+    facing_factor: z.number().int().positive(),
+    corner_factor: z.number().int().positive(),
+    project_management: z.number().int().positive(),
+    current_land_rate_asper_market: z.number().int().positive(),
+    adjustmentfactor: z.number().int().positive(),
+    fillingfactor: z.number().int().positive(),
+    selectfacing: z.string().min(1).max(5),
+    cornerplot: z.string().min(1).max(5),
+  });
   const {
     register,
     handleSubmit,
-    // watch,
+    watch,
     setValue,
     formState: { errors },
-  } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) =>
-    console.log(data.selectfacing);
+  } = useForm<Inputs>({ resolver: zodResolver(schema) });
 
-  // console.log(watch("company")); // watch input value by passing the name of it
 
-  const handleSelectCompany = (selectedValue: String) => {
+  const onSubmit = (data:Inputs) =>{ console.log("data",data);
+  }
+ 
+  console.log(watch("total_land"))
+
+  ; // watch input value by passing the name of it
+
+  const handleSelectCompany = (selectedValue: string) => {
     setValue("company", selectedValue);
   };
-  const handleSelectBranch = (selectedValue: String) => {
+  const handleSelectBranch = (selectedValue: string) => {
     setValue("branch", selectedValue);
   };
-  const handleSelectCorner = (selectedValue: String) => {
+  const handleSelectCorner = (selectedValue: string) => {
     setValue("cornerplot", selectedValue);
   };
-  const handleSelectFacing = (selectedValue: String) => {
+  const handleSelectFacing = (selectedValue: string) => {
     setValue("selectfacing", selectedValue);
   };
   return (
@@ -71,7 +97,7 @@ export default function Left() {
               <form onSubmit={handleSubmit(onSubmit)}>
                 {/* for company */}
                 <div>
-                  <label>Company</label>
+                  <label className=" mb-2">Company</label>
                   <Select
                     onValueChange={handleSelectCompany}
                     {...register("company", { required: true })}
@@ -82,64 +108,72 @@ export default function Left() {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Company</SelectLabel>
-                        <SelectItem value="apple">Apple</SelectItem>
-                        <SelectItem value="banana">Banana</SelectItem>
-                        <SelectItem value="blueberry">Blueberry</SelectItem>
-                        <SelectItem value="grapes">Grapes</SelectItem>
-                        <SelectItem value="pineapple">Pineapple</SelectItem>
+                        <SelectItem value="raw_markup">Raw Markup</SelectItem>
+                        <SelectItem value="economy_markup">
+                          Economy Markup
+                        </SelectItem>
+                        <SelectItem value="deluxe_markup">
+                          Deluxe Markup
+                        </SelectItem>
+                        <SelectItem value="superluxury_markup">
+                          Super Delux Markup
+                        </SelectItem>
+                        <SelectItem value="luxury_markup">
+                          Luxury Markup
+                        </SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
                   {errors.company && (
                     <p className="text-red-400 text-sm" role="alert">
-                      {"fill this field"}
+                      {errors.company.message}
                     </p>
                   )}
                 </div>
                 {/* for model  */}
-                <div className="mt-2">
+                <div className="mt-3">
                   <label>Model</label>
-                  <div className="flex">
-                    <div className="w-full">
+                  <div className="flex justify-between">
+                    <div className=" w-64">
                       <Input
                         type="text"
-                        {...register("TLand", { required: true })}
+                        {...register("total_land", { valueAsNumber: true })}
                         placeholder="Total land Area"
                       />
-                      {errors.TLand && (
+                      {errors.total_land && (
                         <p className="text-red-400 text-sm" role="alert">
-                          {"fill this field"}
+                          {errors.total_land.message}
                         </p>
                       )}
                     </div>
-                    <div className="w-full">
+                    <div className="w-64">
                       <Input
                         type="text"
-                        {...register("TBulit", { required: true })}
+                        {...register("total_built", { valueAsNumber: true })}
                         placeholder="Total Bulit Up Area"
                       />
-                      {errors.TBulit && (
+                      {errors.total_built && (
                         <p className="text-red-400 text-sm" role="alert">
-                          {"fill this field"}
+                          {errors.total_built.message}
                         </p>
                       )}
                     </div>
-                    <div className="w-full">
+                    <div className="w-64">
                       <Input
                         type="text"
-                        {...register("NFloor", { required: true })}
+                        {...register("no_of_floor", { valueAsNumber: true })}
                         placeholder="No's Of Floor"
                       />
-                      {errors.NFloor && (
+                      {errors.no_of_floor && (
                         <p className="text-red-400 text-sm" role="alert">
-                          {"fill this field"}
+                          {errors.no_of_floor.message}
                         </p>
                       )}
                     </div>
                   </div>
                 </div>
                 {/* for Branch */}
-                <div className="mt-2">
+                <div className="mt-3">
                   <label>Branch</label>
                   <Select
                     onValueChange={handleSelectBranch}
@@ -151,11 +185,13 @@ export default function Left() {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Branch</SelectLabel>
-                        <SelectItem value="apple">Remotness factor</SelectItem>
-                        <SelectItem value="banana">
+                        <SelectItem value="remotness_factor">
+                          Remotness factor
+                        </SelectItem>
+                        <SelectItem value="base_builtup_rate">
                           Base Bulitup Rate(raw)
                         </SelectItem>
-                        <SelectItem value="blueberry">
+                        <SelectItem value="base_builtrate_with_additional_of_floor">
                           Base Built rate(raw) With Addition Of Floor
                         </SelectItem>
                       </SelectGroup>
@@ -163,13 +199,13 @@ export default function Left() {
                   </Select>
                   {errors.branch && (
                     <p className="text-red-400 text-sm" role="alert">
-                      {"fill this field"}
+                      {errors.branch.message}
                     </p>
                   )}
                 </div>
 
                 {/* for project */}
-                <div>
+                <div className="mt-3">
                   <label>Project</label>
                   <Select>
                     <SelectTrigger className="w-full">
@@ -182,7 +218,9 @@ export default function Left() {
                         <div className="flex items-center space-x-2 mt-2">
                           <Checkbox
                             id="terms"
-                            {...register("LVSF", { required: true })}
+                            {...register("land_value_sell_factor", {
+                              required: true,
+                            })}
                             value={2}
                           />
                           <label
@@ -196,7 +234,7 @@ export default function Left() {
                         <div className="flex items-center space-x-2 mt-2">
                           <Checkbox
                             id="terms"
-                            {...register("devcharge", { required: true })}
+                            {...register("dev_charge", { required: true })}
                             value={200}
                           />
                           <label
@@ -210,7 +248,7 @@ export default function Left() {
                         <div className="flex items-center space-x-2 mt-2">
                           <Checkbox
                             id="terms"
-                            {...register("legcharge", { required: true })}
+                            {...register("legal_charge", { required: true })}
                             value={200}
                           />
                           <label
@@ -224,7 +262,9 @@ export default function Left() {
                         <div className="flex items-center space-x-2 mt-2">
                           <Checkbox
                             id="terms"
-                            {...register("NSLR", { required: true })}
+                            {...register("net_selling_land_rate", {
+                              required: true,
+                            })}
                             value={400}
                           />
                           <label
@@ -238,7 +278,7 @@ export default function Left() {
                         <div className="flex items-center space-x-2 mt-2">
                           <Checkbox
                             id="terms"
-                            {...register("facing_f", { required: true })}
+                            {...register("facing_factor", { required: true })}
                             value={200}
                           />
                           <label
@@ -252,7 +292,7 @@ export default function Left() {
                         <div className="flex items-center space-x-2 mt-2">
                           <Checkbox
                             id="terms"
-                            {...register("corner_f", { required: true })}
+                            {...register("corner_factor", { required: true })}
                             value={100}
                           />
                           <label
@@ -266,7 +306,9 @@ export default function Left() {
                         <div className="flex items-center space-x-2 mt-2">
                           <Checkbox
                             id="terms"
-                            {...register("project_m", { required: true })}
+                            {...register("project_management", {
+                              required: true,
+                            })}
                             value={400}
                           />
                           <label
@@ -279,42 +321,48 @@ export default function Left() {
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-                  <div className="mt-2">
+                  <div className="mt-3">
                     <label></label>
-                    <div className="flex">
-                      <div className="w-full">
+                    <div className="flex justify-between">
+                      <div className="w-64">
                         <Input
                           type="text"
-                          {...register("CLRAPMV", { required: true })}
+                          {...register("current_land_rate_asper_market", {
+                            valueAsNumber: true,
+                          })}
                           placeholder="Current Land rate As per...."
                         />
-                        {errors.CLRAPMV && (
+                        {errors.current_land_rate_asper_market && (
                           <p className="text-red-400 text-sm" role="alert">
-                            {"fill this field"}
+                            {errors.current_land_rate_asper_market.message}
                           </p>
                         )}
                       </div>
-                      <div className="w-full">
+                      <div className="w-64">
                         <Input
                           type="text"
-                          {...register("adjustmentfactor", { required: true })}
+                          {...register("adjustmentfactor", {
+                            valueAsNumber: true,
+                          })}
                           placeholder="Adjustment Factor"
                         />
                         {errors.adjustmentfactor && (
                           <p className="text-red-400 text-sm" role="alert">
-                            {"fill this field"}
+                            {errors.adjustmentfactor.message}
                           </p>
                         )}
                       </div>
-                      <div className="w-full">
+                      <div className="w-64">
                         <Input
                           type="text"
-                          {...register("fillingfactor", { required: true })}
+                          {...register("fillingfactor", {
+                            valueAsNumber: true,
+                          })}
                           placeholder="Filling Factor"
                         />
                         {errors.fillingfactor && (
                           <p className="text-red-400 text-sm" role="alert">
-                            {"fill this field"}
+                            {errors.fillingfactor.message}
                           </p>
                         )}
                       </div>
@@ -322,10 +370,10 @@ export default function Left() {
                   </div>
                 </div>
                 {/* for unit  */}
-                <div className="mt-2">
+                <div className=" mt-3">
                   <label>Unit</label>
-                  <div className="flex">
-                    <div>
+                  <div className="flex justify-between">
+                    <div className="w-96">
                       <Select
                         onValueChange={handleSelectCorner}
                         {...register("cornerplot", { required: true })}
@@ -337,19 +385,19 @@ export default function Left() {
                           <SelectGroup>
                             <SelectLabel>Select Corner Plot</SelectLabel>
                             <SelectItem value={"yes"}>Yes</SelectItem>
-                            <SelectItem value={"No"}>No</SelectItem>
+                            <SelectItem value={"no"}>No</SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>
                       {errors.cornerplot && (
                         <p className="text-red-400 text-sm" role="alert">
-                          {"fill this field"}
+                          {errors.cornerplot.message}
                         </p>
                       )}
                     </div>
 
                     {/* for Facing */}
-                    <div>
+                    <div className="w-96">
                       <Select
                         onValueChange={handleSelectFacing}
                         {...register("selectfacing", { required: true })}
@@ -369,7 +417,7 @@ export default function Left() {
                       </Select>
                       {errors.selectfacing && (
                         <p className="text-red-400 text-sm" role="alert">
-                          {"fill this field"}
+                          {errors.selectfacing.message}
                         </p>
                       )}
                     </div>

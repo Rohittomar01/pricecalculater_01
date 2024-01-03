@@ -19,7 +19,7 @@ import { useContext, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 
 type Inputs = {
-  company: number;
+  company: string;
   total_land: number;
   total_built: number;
   no_of_floor: number;
@@ -38,12 +38,12 @@ type Inputs = {
   cornerplot: string;
 };
 
-export default function Left() {
+export default function FillDetails_Form() {
   // const setData = useContext(FormContext);
   const [FormData, setFormData] = useState<Inputs | null>(null);
 
   const schema: ZodType<Inputs> = z.object({
-    company: z.number(),
+    company: z.string().min(2).max(20),
     total_land: z.number().int().positive(),
     total_built: z.number().int().positive(),
     no_of_floor: z.number().int().positive(),
@@ -76,6 +76,47 @@ export default function Left() {
   };
 
   const Right: SubmitHandler<Inputs> = () => {
+    let company_Value: number = 1;
+    let cornerplot_Value:number=1;
+
+    switch (FormData?.company) {
+      case "raw_markup":
+        company_Value = 1000;
+        break;
+      case "economy_markup":
+        company_Value = 2000;
+        break;
+      case "deluxe_markup":
+        company_Value = 500;
+        break;
+      case "superluxury_markup":
+        company_Value = 1500;
+        break;
+      case "luxury_markup":
+        company_Value = 1200;
+        break;
+    }
+
+    switch (FormData?.cornerplot) {
+      case "1":
+        cornerplot_Value = 200;
+        break;
+      case "2":
+        cornerplot_Value = 400;
+        break;
+      case "3":
+        cornerplot_Value = 600;
+        break;
+      case "4":
+        cornerplot_Value =800;
+        break;
+      case "5":
+        cornerplot_Value = 1000;
+        break;
+    }
+console.log(company_Value,cornerplot_Value);
+
+
     return (
       <div>
         {FormData !== null ? (
@@ -116,7 +157,7 @@ export default function Left() {
     );
   };
 
-  const handleSelectCompany = (selectedValue: number) => {
+  const handleSelectCompany = (selectedValue: string) => {
     setValue("company", selectedValue);
   };
   const handleSelectBranch = (selectedValue: string) => {
@@ -143,7 +184,7 @@ export default function Left() {
                   <label className="mb-2">Company</label>
                   <Select
                     onValueChange={handleSelectCompany}
-                    {...register("company", { valueAsNumber: true })}
+                    {...register("company")}
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select A Company" />
@@ -151,11 +192,11 @@ export default function Left() {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Company</SelectLabel>
-                        <SelectItem value={1000}>Raw Markup</SelectItem>
-                        {/* <SelectItem value="economy_markup">
+                        <SelectItem value={"raw_markup"}>Raw Markup</SelectItem>
+                        <SelectItem value="economy_markup">
                           Economy Markup
-                        </SelectItem> */}
-                        {/* <SelectItem value="deluxe_markup">
+                        </SelectItem>
+                        <SelectItem value="deluxe_markup">
                           Deluxe Markup
                         </SelectItem>
                         <SelectItem value="superluxury_markup">
@@ -163,7 +204,7 @@ export default function Left() {
                         </SelectItem>
                         <SelectItem value="luxury_markup">
                           Luxury Markup
-                        </SelectItem> */}
+                        </SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -176,8 +217,8 @@ export default function Left() {
                 {/* for model  */}
                 <div className="mt-3">
                   <label>Model</label>
-                  <div className="flex justify-between">
-                    <div className=" w-64">
+                  <div className=" sm:flex sm:justify-between">
+                    <div className=" w-64 mt-2 sm:mt-0">
                       <Input
                         type="text"
                         {...register("total_land", { valueAsNumber: true })}
@@ -189,7 +230,7 @@ export default function Left() {
                         </p>
                       )}
                     </div>
-                    <div className="w-64">
+                    <div className="w-64 mt-2 sm:mt-0">
                       <Input
                         type="text"
                         {...register("total_built", { valueAsNumber: true })}
@@ -201,7 +242,7 @@ export default function Left() {
                         </p>
                       )}
                     </div>
-                    <div className="w-64">
+                    <div className="w-64 mt-2 sm:mt-0">
                       <Input
                         type="text"
                         {...register("no_of_floor", { valueAsNumber: true })}
@@ -372,8 +413,8 @@ export default function Left() {
                   </Select>
                   <div className="mt-3">
                     <label></label>
-                    <div className="flex justify-between">
-                      <div className="w-64">
+                    <div className="  sm:flex sm:justify-between">
+                      <div className="w-full sm:64 mt-2 sm:mt-0">
                         <Input
                           type="text"
                           {...register("current_land_rate_asper_market", {
@@ -387,7 +428,7 @@ export default function Left() {
                           </p>
                         )}
                       </div>
-                      <div className="w-64">
+                      <div className="w-full sm:64 mt-2 sm:mt-0">
                         <Input
                           type="text"
                           {...register("adjustmentfactor", {
@@ -401,7 +442,7 @@ export default function Left() {
                           </p>
                         )}
                       </div>
-                      <div className="w-64">
+                      <div className="w-full sm:64mt-2 sm:mt-0">
                         <Input
                           type="text"
                           {...register("fillingfactor", {
@@ -421,8 +462,8 @@ export default function Left() {
                 {/* for unit  */}
                 <div className=" mt-3">
                   <label>Unit</label>
-                  <div className="flex justify-between">
-                    <div className="w-96">
+                  <div className=" sm:flex sm:justify-between">
+                    <div className="w-full sm:96 sm:mt-0 mt-2">
                       <Select
                         onValueChange={handleSelectCorner}
                         {...register("cornerplot", { required: true })}
@@ -433,8 +474,11 @@ export default function Left() {
                         <SelectContent>
                           <SelectGroup>
                             <SelectLabel>Select Corner Plot</SelectLabel>
-                            <SelectItem value={"yes"}>Yes</SelectItem>
-                            <SelectItem value={"no"}>No</SelectItem>
+                            <SelectItem value={"1"}>1</SelectItem>
+                            <SelectItem value={"2"}>2</SelectItem>
+                            <SelectItem value={"3"}>3</SelectItem>
+                            <SelectItem value={"4"}>4</SelectItem>
+                            <SelectItem value={"5"}>5</SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>
@@ -446,7 +490,7 @@ export default function Left() {
                     </div>
 
                     {/* for Facing */}
-                    <div className="w-96">
+                    <div className="w-full sm:96 sm:mt-0 mt-2">
                       <Select
                         onValueChange={handleSelectFacing}
                         {...register("selectfacing", { required: true })}
@@ -473,10 +517,10 @@ export default function Left() {
                   </div>
                 </div>
                 <Button type="submit" className="mt-4">
-                  Click Me
+                  Calculate
                 </Button>
               </form>
-              <div>
+              <div className=" p-10">
                 <Right />
               </div>
             </div>

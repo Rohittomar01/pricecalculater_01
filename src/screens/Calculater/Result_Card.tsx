@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { useContext } from "react";
 import { FormContext } from "../Context/Context";
 
-export default function Right() {
+export default function Result_Card() {
 
   const data=useContext(FormContext)
 

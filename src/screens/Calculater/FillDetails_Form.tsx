@@ -42,25 +42,30 @@ export default function FillDetails_Form() {
   // const setData = useContext(FormContext);
   const [FormData, setFormData] = useState<Inputs | null>(null);
 
-  const schema: ZodType<Inputs> = z.object({
-    company: z.string().min(2).max(20),
-    total_land: z.number().int().positive(),
-    total_built: z.number().int().positive(),
-    no_of_floor: z.number().min(1).max(4),
-    branch: z.string().min(1).max(50),
-    dev_charge: z.number().int().positive().optional(),
-    legal_charge: z.number().int().positive(),
-    land_value_sell_factor: z.number().int().positive(),
-    net_selling_land_rate: z.number().int().positive(),
-    facing_factor: z.number().int().positive(),
-    corner_factor: z.number().int().positive(),
-    project_management: z.number().int().positive(),
-    current_land_rate_asper_market: z.number().int().positive(),
-    adjustmentfactor: z.number().int().positive(),
-    fillingfactor: z.number().int().positive(),
-    selectfacing: z.string().min(1).max(5),
-    cornerplot: z.string().min(1).max(5),
-  });
+  const schema: ZodType<Inputs> = z
+    .object({
+      company: z.string().min(2).max(20),
+      total_land: z.number().int().positive(),
+      total_built: z.number().int().positive(),
+      no_of_floor: z.number().min(1).max(4),
+      branch: z.string().min(1).max(50),
+      dev_charge: z.number().int().positive().optional(),
+      legal_charge: z.number().int().positive(),
+      land_value_sell_factor: z.number().int().positive(),
+      net_selling_land_rate: z.number().int().positive(),
+      facing_factor: z.number().int().positive(),
+      corner_factor: z.number().int().positive(),
+      project_management: z.number().int().positive(),
+      current_land_rate_asper_market: z.number().int().positive(),
+      adjustmentfactor: z.number().int().positive(),
+      fillingfactor: z.number().int().positive(),
+      selectfacing: z.string().min(1).max(5),
+      cornerplot: z.string().min(1).max(5),
+    })
+    .refine((data) => data.total_built <= data.total_land, {
+      message: "fill value lower than total land area",
+      path: ["total_built"],
+    });
   const {
     register,
     handleSubmit,
@@ -72,12 +77,11 @@ export default function FillDetails_Form() {
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
     setFormData(data);
-    
+
     // setData(data)
   };
 
   const Right: SubmitHandler<Inputs> = () => {
-
     let company_Value: number = 1;
     let cornerplot_Value: number = 1;
     let total_land__Value: number =
@@ -90,13 +94,11 @@ export default function FillDetails_Form() {
     let branch_Value: number = 1;
     let remotness_factor_value: number = 1;
     let selectFacing_Value: number = 1;
-   
-        
-     
+
     switch (FormData?.company) {
       case "raw_markup":
         company_Value = 1000;
-          break;
+        break;
       case "economy_markup":
         company_Value = 2000;
         break;
@@ -141,19 +143,20 @@ export default function FillDetails_Form() {
         break;
     }
     let grandtotal_Value_01: number =
-    company_Value +
-    cornerplot_Value +
-    total_land__Value +
-    building_Price +
-    branch_Value +
-    remotness_factor_value +
-    parseInt(FormData?.dev_charge) +
-    parseInt(FormData?.facing_factor) +
-    parseInt(FormData?.fillingfactor) +
-    parseInt(FormData?.project_management) +
-    parseInt(FormData?.land_value_sell_factor) +
-    parseInt(FormData?.legal_charge) +
-    parseInt(FormData?.net_selling_land_rate)+parseInt(FormData?.adjustmentfactor);
+      company_Value +
+      cornerplot_Value +
+      total_land__Value +
+      building_Price +
+      branch_Value +
+      remotness_factor_value +
+      parseInt(FormData?.dev_charge) +
+      parseInt(FormData?.facing_factor) +
+      parseInt(FormData?.fillingfactor) +
+      parseInt(FormData?.project_management) +
+      parseInt(FormData?.land_value_sell_factor) +
+      parseInt(FormData?.legal_charge) +
+      parseInt(FormData?.net_selling_land_rate) +
+      parseInt(FormData?.adjustmentfactor);
 
     switch (FormData?.selectfacing) {
       case "east":
@@ -169,10 +172,8 @@ export default function FillDetails_Form() {
         selectFacing_Value = (1 / 100) * grandtotal_Value_01;
         break;
     }
-   
 
-  let grandtotal_Value_02:number = selectFacing_Value + grandtotal_Value_01;
-
+    let grandtotal_Value_02: number = selectFacing_Value + grandtotal_Value_01;
 
     return (
       <div>
@@ -590,7 +591,10 @@ export default function FillDetails_Form() {
                     </div>
                   </div>
                 </div>
-                <Button  type="submit" className="mt-4 w-full sm:w-32 bg-blue-500">
+                <Button
+                  type="submit"
+                  className="mt-4 w-full sm:w-32 bg-blue-500"
+                >
                   Calculate
                 </Button>
               </form>

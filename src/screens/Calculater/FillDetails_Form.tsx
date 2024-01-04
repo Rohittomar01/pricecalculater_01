@@ -46,7 +46,7 @@ export default function FillDetails_Form() {
     company: z.string().min(2).max(20),
     total_land: z.number().int().positive(),
     total_built: z.number().int().positive(),
-    no_of_floor: z.number().int().positive(),
+    no_of_floor: z.number().min(1).max(4),
     branch: z.string().min(1).max(50),
     dev_charge: z.number().int().positive().optional(),
     legal_charge: z.number().int().positive(),
@@ -72,17 +72,31 @@ export default function FillDetails_Form() {
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
     setFormData(data);
+    
     // setData(data)
   };
 
   const Right: SubmitHandler<Inputs> = () => {
-    let company_Value: number = 1;
-    let cornerplot_Value:number=1;
 
+    let company_Value: number = 1;
+    let cornerplot_Value: number = 1;
+    let total_land__Value: number =
+      parseInt(FormData?.total_land) *
+      parseInt(FormData?.current_land_rate_asper_market);
+    let total_built_Value: number = parseInt(FormData?.total_built) * 200;
+    let no_of_floor_Value: number = parseInt(FormData?.no_of_floor) * 500;
+    let building_Price: number =
+      parseInt(total_built_Value) * parseInt(no_of_floor_Value);
+    let branch_Value: number = 1;
+    let remotness_factor_value: number = 1;
+    let selectFacing_Value: number = 1;
+   
+        
+     
     switch (FormData?.company) {
       case "raw_markup":
         company_Value = 1000;
-        break;
+          break;
       case "economy_markup":
         company_Value = 2000;
         break;
@@ -108,13 +122,56 @@ export default function FillDetails_Form() {
         cornerplot_Value = 600;
         break;
       case "4":
-        cornerplot_Value =800;
+        cornerplot_Value = 800;
         break;
       case "5":
         cornerplot_Value = 1000;
         break;
     }
-console.log(company_Value,cornerplot_Value);
+
+    switch (FormData?.branch) {
+      case "remotness_factor":
+        remotness_factor_value = 100;
+        break;
+      case "base_builtup_rate":
+        branch_Value = 110;
+        break;
+      case "base_builtrate_with_additional_of_floor":
+        branch_Value = 150;
+        break;
+    }
+    let grandtotal_Value_01: number =
+    company_Value +
+    cornerplot_Value +
+    total_land__Value +
+    building_Price +
+    branch_Value +
+    remotness_factor_value +
+    parseInt(FormData?.dev_charge) +
+    parseInt(FormData?.facing_factor) +
+    parseInt(FormData?.fillingfactor) +
+    parseInt(FormData?.project_management) +
+    parseInt(FormData?.land_value_sell_factor) +
+    parseInt(FormData?.legal_charge) +
+    parseInt(FormData?.net_selling_land_rate)+parseInt(FormData?.adjustmentfactor);
+
+    switch (FormData?.selectfacing) {
+      case "east":
+        selectFacing_Value = (5 / 100) * grandtotal_Value_01;
+        break;
+      case "west":
+        selectFacing_Value = (2 / 100) * grandtotal_Value_01;
+        break;
+      case "north":
+        selectFacing_Value = (4 / 100) * grandtotal_Value_01;
+        break;
+      case "south":
+        selectFacing_Value = (1 / 100) * grandtotal_Value_01;
+        break;
+    }
+   
+
+  let grandtotal_Value_02:number = selectFacing_Value + grandtotal_Value_01;
 
 
     return (
@@ -125,28 +182,45 @@ console.log(company_Value,cornerplot_Value);
               <div>
                 <Card>
                   <CardHeader>
-                    <CardTitle>Result</CardTitle>
+                    <CardTitle>Bunglow Price</CardTitle>
                   </CardHeader>
                   <CardContent className="p-10">
-                    <p className="mt-3">Land Price :</p>
+                    <p>Land Price :{total_land__Value}</p>
                     <Separator />
-                    <p className="mt-3">Buliding Price :</p>
+                    <p className="mt-3">Buliding Price :{building_Price}</p>
                     <Separator />
-                    <p className="mt-3 font-bold">Sub Total :</p>
+                    <p className="mt-3 font-bold">
+                      Sub Total :<b>{total_land__Value + building_Price}</b>
+                    </p>
                     <Separator />
-                    <p className="mt-3">Corner Charge :</p>
+                    <p className="mt-3">Corner Charge :{cornerplot_Value}</p>
                     <Separator />
-                    <p className="mt-3">Facing Charge :</p>
+                    <p className="mt-3">Facing Charge :{selectFacing_Value}</p>
                     <Separator />
-                    <p className="mt-3">Facing Charge :</p>
+                    <p className="mt-3">
+                      Filling Charge :{FormData.fillingfactor}
+                    </p>
                     <Separator />
-                    <p className="mt-3">Filling Charge :</p>
+                    <p className="mt-3">
+                      Project Management Charge :{FormData.project_management}
+                    </p>
                     <Separator />
-                    <p className="mt-3">Remotness Charge :</p>
+                    <p className="mt-3">
+                      Project Adjustment Charge :{FormData.adjustmentfactor}
+                    </p>
                     <Separator />
-                    <p className="mt-3 font-bold">Grand Total :</p>
+                    <p className="mt-3">
+                      Remotness Charge :{remotness_factor_value}
+                    </p>
+                    <Separator />
+                    <p className="mt-3 font-bold">
+                      Grand Total :{grandtotal_Value_02}
+                    </p>
                   </CardContent>
                 </Card>
+                <div>
+                  <h1 className="text-center">Thank You....</h1>
+                </div>
               </div>
             </div>
           </>
@@ -218,11 +292,11 @@ console.log(company_Value,cornerplot_Value);
                 <div className="mt-3">
                   <label>Model</label>
                   <div className=" sm:flex sm:justify-between">
-                    <div className=" w-64 mt-2 sm:mt-0">
+                    <div className="  w-full sm:w-96 mt-2 sm:mt-0">
                       <Input
                         type="text"
                         {...register("total_land", { valueAsNumber: true })}
-                        placeholder="Total land Area"
+                        placeholder="Total land Area in sqf."
                       />
                       {errors.total_land && (
                         <p className="text-red-400 text-sm" role="alert">
@@ -230,7 +304,7 @@ console.log(company_Value,cornerplot_Value);
                         </p>
                       )}
                     </div>
-                    <div className="w-64 mt-2 sm:mt-0">
+                    <div className=" w-full sm:w-96 mt-2 sm:mt-0">
                       <Input
                         type="text"
                         {...register("total_built", { valueAsNumber: true })}
@@ -242,7 +316,7 @@ console.log(company_Value,cornerplot_Value);
                         </p>
                       )}
                     </div>
-                    <div className="w-64 mt-2 sm:mt-0">
+                    <div className=" w-full sm:w-96 mt-2 sm:mt-0">
                       <Input
                         type="text"
                         {...register("no_of_floor", { valueAsNumber: true })}
@@ -264,7 +338,7 @@ console.log(company_Value,cornerplot_Value);
                     {...register("branch", { required: true })}
                   >
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select a fruit" />
+                      <SelectValue placeholder="Select A Branch" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
@@ -414,7 +488,7 @@ console.log(company_Value,cornerplot_Value);
                   <div className="mt-3">
                     <label></label>
                     <div className="  sm:flex sm:justify-between">
-                      <div className="w-full sm:64 mt-2 sm:mt-0">
+                      <div className="w-full sm:w-96 mt-2 sm:mt-0 ">
                         <Input
                           type="text"
                           {...register("current_land_rate_asper_market", {
@@ -428,7 +502,7 @@ console.log(company_Value,cornerplot_Value);
                           </p>
                         )}
                       </div>
-                      <div className="w-full sm:64 mt-2 sm:mt-0">
+                      <div className="w-full sm:w-96 mt-2 sm:mt-0">
                         <Input
                           type="text"
                           {...register("adjustmentfactor", {
@@ -442,7 +516,7 @@ console.log(company_Value,cornerplot_Value);
                           </p>
                         )}
                       </div>
-                      <div className="w-full sm:64mt-2 sm:mt-0">
+                      <div className="w-full sm:w-96 mt-2 sm:mt-0">
                         <Input
                           type="text"
                           {...register("fillingfactor", {
@@ -463,7 +537,7 @@ console.log(company_Value,cornerplot_Value);
                 <div className=" mt-3">
                   <label>Unit</label>
                   <div className=" sm:flex sm:justify-between">
-                    <div className="w-full sm:96 sm:mt-0 mt-2">
+                    <div className="w-full sm:w-px[20] sm:mt-0 mt-2 sm:mr-2">
                       <Select
                         onValueChange={handleSelectCorner}
                         {...register("cornerplot", { required: true })}
@@ -490,7 +564,7 @@ console.log(company_Value,cornerplot_Value);
                     </div>
 
                     {/* for Facing */}
-                    <div className="w-full sm:96 sm:mt-0 mt-2">
+                    <div className="w-full sm:w-px[10px] sm:mt-0 mt-2 sm:ml-2">
                       <Select
                         onValueChange={handleSelectFacing}
                         {...register("selectfacing", { required: true })}
@@ -516,7 +590,7 @@ console.log(company_Value,cornerplot_Value);
                     </div>
                   </div>
                 </div>
-                <Button type="submit" className="mt-4">
+                <Button  type="submit" className="mt-4 w-full sm:w-32 bg-blue-500">
                   Calculate
                 </Button>
               </form>

@@ -1,25 +1,30 @@
-import { createContext, useState } from "react";
+import {
+  createContext,
+  useState,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+} from "react";
 
+type FormContextType = {
+  data: any;
+  setData: Dispatch<SetStateAction<any>>;
+};
 
-type FormContextType={
-    data:any;
-    setData:any;
-}
-type FormDataProps={
-    children:React.ReactNode;
-}
+type FormDataProps = {
+  children: ReactNode;
+};
 
 export const FormContext = createContext<null | FormContextType>(null);
 
- export const FormData=({children}:FormDataProps)=>{
+export const FormData = ({ children }: FormDataProps) => {
+  const [formState, setFormState] = useState<FormContextType>({
+    data: "",
+    setData: (newData: any) =>
+      setFormState((prevState) => ({ ...prevState, data: newData })),
+  });
 
-    const[data,setData]=useState<FormContextType | null>(/* initial value */ null);
-
-    return(
-        <FormContext.Provider value={{data,setData}}>
-            {children}
-        </FormContext.Provider>
-    )
-
-
-}
+  return (
+    <FormContext.Provider value={formState}>{children}</FormContext.Provider>
+  );
+};

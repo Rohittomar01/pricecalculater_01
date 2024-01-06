@@ -6,12 +6,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useContext } from "react";
-import { FormContext } from "../Context/Context";
+// import { useContext } from "react";
+// import { FormContext } from "../Context/Context";
 
 export default function Result_Card() {
 
-  const data=useContext(FormContext)
+  // const data=useContext(FormContext)
 
   return (
     <div>

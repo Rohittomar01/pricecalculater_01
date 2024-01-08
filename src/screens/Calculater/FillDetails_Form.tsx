@@ -74,21 +74,6 @@ export default function FillDetails_Form() {
       path: ["total_built"],
     });
 
-  const data = {
-    company: "MyCompany",
-    total_land: "invalid", // This will trigger the custom message for total_land
-    total_built: "invalid", // This will trigger the custom message for total_built
-    no_of_floor: 2,
-    branch: "Headquarters",
-  };
-
-  try {
-    schema.parse(data);
-    console.log("Validation passed");
-  } catch (error) {
-    // console.error("Validation failed:", error.message);
-  }
-
   const {
     register,
     handleSubmit,
@@ -172,7 +157,7 @@ export default function FillDetails_Form() {
       building_Price +
       branch_Value +
       remotness_factor_value +
-      (FormData?.dev_charge ?? 0) +
+      (FormData?.dev_charge ? 100 : 0) +
       (FormData?.facing_factor ?? 0) +
       (FormData?.fillingfactor ?? 0) +
       (FormData?.project_management ?? 0) +
@@ -232,7 +217,7 @@ export default function FillDetails_Form() {
                       <Separator />
                       <Spacer />
                       <p>
-                        Project Management Charge :{FormData.project_management}
+                        {/* Project Management Charge :{FormData.project_management} */}
                       </p>
                       <Separator />
                       <Spacer />
@@ -317,372 +302,297 @@ export default function FillDetails_Form() {
   const handleSelectFacing = (selectedValue: string) => {
     setValue("selectfacing", selectedValue);
   };
-  
+
+  const checkboxData = [
+    {
+      id: "dev_charge",
+      value: 100,
+      name: "dev_charge",
+      label: "Recents",
+    },
+    {
+      id: "legal_charge",
+      value: 200,
+      name: "legal_charge",
+      label: "legal_charge",
+    },
+    {
+      id: "land_value_sell_factor",
+      value: 300,
+      name: "land_value_sell_factor",
+      label: "land value sell factor",
+    },
+    {
+      id: "net_selling_land_rate",
+      value: 200,
+      name: "net_selling_land_rate",
+      label: "net selling land rate",
+    },
+    {
+      id: "facing_factor",
+      value: 200,
+      name: "facing_factor",
+      label: "facing factor",
+    },
+    {
+      id: "corner_factor",
+      value: 200,
+      name: "corner_factor",
+      label: "corner factor",
+    },
+    {
+      id: "project_management",
+      value: 200,
+      name: "project_management",
+      label: "project management",
+    },
+  ] as const;
+
   return (
     <div className="flex flex-wrap justify-around w-screen p-5  sm:p-10">
       <div className="mb-5">
-        <Card className=" w-[300px] sm:w-[550px]">
+        <Card className=" w-[300px] sm:w-[600px]">
           <CardHeader>
             <CardTitle>Fill Detail</CardTitle>
           </CardHeader>
           <CardContent>
             <div>
               <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="grid grid-cols-12 gap-6">
-                  <div className="col-span-12 sm:col-span-6">
-                    <Label htmlFor="framework">Company</Label>
-                    <Select
-                      onValueChange={handleSelectCompany}
-                      {...register("company")}
-                    >
-                      <SelectTrigger className="w-[250px]">
-                        <SelectValue placeholder="Select A Company" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Company</SelectLabel>
-                          <SelectItem value={"raw_markup"}>
-                            Raw Markup
-                          </SelectItem>
-                          <SelectItem value="economy_markup">
-                            Economy Markup
-                          </SelectItem>
-                          <SelectItem value="deluxe_markup">
-                            Deluxe Markup
-                          </SelectItem>
-                          <SelectItem value="superluxury_markup">
-                            Super Delux Markup
-                          </SelectItem>
-                          <SelectItem value="luxury_markup">
-                            Luxury Markup
-                          </SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                    {errors.company && (
-                      <p className="text-red-400 text-sm" role="alert">
-                        {errors.company.message}
-                      </p>
-                    )}
+                <div className="grid gap-2 ">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <Label htmlFor="framework">Company</Label>
+                      <Select
+                        onValueChange={handleSelectCompany}
+                        {...register("company")}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select A Company" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Company</SelectLabel>
+                            <SelectItem value={"raw_markup"}>
+                              Raw Markup
+                            </SelectItem>
+                            <SelectItem value="economy_markup">
+                              Economy Markup
+                            </SelectItem>
+                            <SelectItem value="deluxe_markup">
+                              Deluxe Markup
+                            </SelectItem>
+                            <SelectItem value="superluxury_markup">
+                              Super Delux Markup
+                            </SelectItem>
+                            <SelectItem value="luxury_markup">
+                              Luxury Markup
+                            </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      {errors.company && (
+                        <p className="text-red-400 text-sm" role="alert">
+                          {errors.company.message}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Label>Branch</Label>
+                      <Select
+                        onValueChange={handleSelectBranch}
+                        {...register("branch", { required: true })}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select A Branch" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Branch</SelectLabel>
+                            <SelectItem value="remotness_factor">
+                              Remotness factor
+                            </SelectItem>
+                            <SelectItem value="base_builtup_rate">
+                              Base Bulitup Rate(raw)
+                            </SelectItem>
+                            <SelectItem value="base_builtrate_with_additional_of_floor">
+                              Base Built rate(raw) With Addition Of Floor
+                            </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      {errors.branch && (
+                        <p className="text-red-400 text-sm" role="alert">
+                          {errors.branch.message}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <div className=" col-span-12  sm:col-span-6">
-                    <Label>Branch</Label>
-                    <Select
-                      onValueChange={handleSelectBranch}
-                      {...register("branch", { required: true })}
-                    >
-                      <SelectTrigger className="w-[250px]">
-                        <SelectValue placeholder="Select A Branch" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Branch</SelectLabel>
-                          <SelectItem value="remotness_factor">
-                            Remotness factor
-                          </SelectItem>
-                          <SelectItem value="base_builtup_rate">
-                            Base Bulitup Rate(raw)
-                          </SelectItem>
-                          <SelectItem value="base_builtrate_with_additional_of_floor">
-                            Base Built rate(raw) With Addition Of Floor
-                          </SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                    {errors.branch && (
-                      <p className="text-red-400 text-sm" role="alert">
-                        {errors.branch.message}
-                      </p>
-                    )}
-                  </div>
-
                   {/* for model  */}
-                  <div className="col-span-12">
-                    <Label>Model</Label>
-                    <div className="grid grid-cols-12 gap-6">
-                      <div className=" col-span-12  sm:col-span-4">
-                        <Input
-                          type="text"
-                          {...register("total_land", {
-                            valueAsNumber: true,
-                            required: true,
-                          })}
-                          placeholder="Total land Area in sqf."
-                        />
-                        {errors.total_land && (
-                          <p className="text-red-400 text-sm" role="alert">
-                            Please enter only number.
-                          </p>
-                        )}
-                      </div>
-                      <div className="col-span-12  sm:col-span-4">
-                        <Input
-                          type="text"
-                          {...register("total_built", { valueAsNumber: true })}
-                          placeholder="Total Bulit Up Area"
-                        />
-                        {errors.total_built && (
-                          <p className="text-red-400 text-sm" role="alert">
-                            Please enter number less than Total land Area .
-                          </p>
-                        )}
-                      </div>
-                      <div className="col-span-12  sm:col-span-4">
-                        <Input
-                          type="text"
-                          {...register("no_of_floor", { valueAsNumber: true })}
-                          placeholder="No's Of Floor"
-                        />
-                       {errors.no_of_floor && (
-                          <p className="text-red-400 text-sm" role="alert">
-                            Please enter number less than 5.
-                          </p>
-                        )}
-                      </div>
+                  <Label>Model</Label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div>
+                      <Input
+                        type="text"
+                        {...register("total_land", {
+                          valueAsNumber: true,
+                          required: true,
+                        })}
+                        placeholder="Total land Area in sqf."
+                      />
+                      {errors.total_land && (
+                        <p className="text-red-400 text-sm" role="alert">
+                          Please enter only number
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Input
+                        type="text"
+                        {...register("total_built", { valueAsNumber: true })}
+                        placeholder="Total Bulit Up Area"
+                      />
+                      {errors.total_built && (
+                        <p className="text-red-400 text-sm" role="alert">
+                          Enter less than Total land Area
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Input
+                        type="text"
+                        {...register("no_of_floor", { valueAsNumber: true })}
+                        placeholder="No's Of Floor"
+                      />
+                      {errors.no_of_floor && (
+                        <p className="text-red-400 text-sm" role="alert">
+                          Please enter less than 5
+                        </p>
+                      )}
                     </div>
                   </div>
 
                   {/* for project */}
-                  <div className="col-span-12">
+                  <div className="grid grid-cols-1">
                     <Label>Project</Label>
-                    <div>
-                      <Checkbox
-                        id="terms"
-                        {...register("land_value_sell_factor", {
-                          valueAsNumber: true,
-                        })}
-                        value={200}
-                      />
-                      <label
-                        htmlFor="terms"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        Land Value Sell Factor
-                      </label>
-                    </div>
-                    {errors.land_value_sell_factor && (
-                      <p className="text-red-400 text-sm" role="alert">
-                        {errors.land_value_sell_factor.message}
-                      </p>
-                    )}
-                    <div>
-                      <Checkbox
-                        id="terms"
-                        {...register("dev_charge", { valueAsNumber: true })}
-                        value={200}
-                      />
-                      <label
-                        htmlFor="terms"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        Development Charge
-                      </label>
-                    </div>
-                    {errors.dev_charge && (
-                      <p className="text-red-400 text-sm" role="alert">
-                        {errors.dev_charge.message}
-                      </p>
-                    )}
-                    <div>
-                      <Checkbox
-                        id="terms"
-                        {...register("legal_charge", {
-                          valueAsNumber: true,
-                        })}
-                        value={200}
-                      />
-                      <label
-                        htmlFor="terms"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        Legal Charge
-                      </label>
-                    </div>
-                    {errors.legal_charge && (
-                      <p className="text-red-400 text-sm" role="alert">
-                        {errors.legal_charge.message}
-                      </p>
-                    )}
-                    <div>
-                      <Checkbox
-                        id="terms"
-                        {...register("net_selling_land_rate", {
-                          valueAsNumber: true,
-                        })}
-                        value={400}
-                      />
-                      <label
-                        htmlFor="terms"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        Net Selling Land Rate
-                      </label>
-                    </div>
-                    {errors.net_selling_land_rate && (
-                      <p className="text-red-400 text-sm" role="alert">
-                        {errors.net_selling_land_rate.message}
-                      </p>
-                    )}
-                    <div>
-                      <Checkbox
-                        id="terms"
-                        {...register("facing_factor", {
-                          valueAsNumber: true,
-                        })}
-                        value={200}
-                      />
-                      <label
-                        htmlFor="terms"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        Facing Factor
-                      </label>
-                    </div>
-                    {errors.facing_factor && (
-                      <p className="text-red-400 text-sm" role="alert">
-                        {errors.facing_factor.message}
-                      </p>
-                    )}
-                    <div>
-                      <Checkbox
-                        id="terms"
-                        {...register("corner_factor", {
-                          valueAsNumber: true,
-                        })}
-                        value={100}
-                      />
-                      <label
-                        htmlFor="terms"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        Corner Factor
-                      </label>
-                    </div>
-                    {errors.corner_factor && (
-                      <p className="text-red-400 text-sm" role="alert">
-                        {errors.corner_factor.message}
-                      </p>
-                    )}
-                    <div>
-                      <Checkbox
-                        id="terms"
-                        {...register("project_management", {
-                          valueAsNumber: true,
-                        })}
-                        value={400}
-                      />
-                      <label
-                        htmlFor="terms"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        Project Management(Advertisements,etc.)
-                      </label>
-                    </div>
-                    {errors.project_management && (
-                      <p className="text-red-400 text-sm" role="alert">
-                        {errors.project_management.message}
-                      </p>
-                    )}
-                    <div>
-                      <div className="grid grid-cols-12 gap-6">
-                        <div className="col-span-12  sm:col-span-4 mt-2">
-                          <Input
-                            type="text"
-                            {...register("current_land_rate_asper_market", {
+                    {checkboxData.map((item) => {
+                      return (
+                        <div>
+                          <Checkbox
+                          defaultChecked
+                            id={item.id}
+                            value={item.value}
+                            {...register(`${item.name}`, {
                               valueAsNumber: true,
                             })}
-                            placeholder="Current Land rate As per...."
                           />
-                          {errors.current_land_rate_asper_market && (
-                          <p className="text-red-400 text-sm" role="alert">
-                            Please enter only number.
-                          </p>
-                        )}
+                          <label
+                            htmlFor={item.name}
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            {item.label}
+                          </label>
                         </div>
-                        <div className="col-span-12  sm:col-span-4 mt-2">
-                          <Input
-                            type="text"
-                            {...register("adjustmentfactor", {
-                              valueAsNumber: true,
-                            })}
-                            placeholder="Adjustment Factor"
-                          />
-                          {errors.adjustmentfactor && (
-                          <p className="text-red-400 text-sm" role="alert">
-                            Please enter only number.
-                          </p>
-                        )}
-                        </div>
-                        <div className="col-span-12  sm:col-span-4 mt-2">
-                          <Input
-                            type="text"
-                            {...register("fillingfactor", {
-                              valueAsNumber: true,
-                            })}
-                            placeholder="Filling Factor"
-                          />
-                          {errors.fillingfactor && (
-                          <p className="text-red-400 text-sm" role="alert">
-                            Please enter only number.
-                          </p>
-                        )}
-                        </div>
-                      </div>
+                      );
+                    })}
+                    <Spacer />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div>
+                      <Input
+                        type="text"
+                        {...register("current_land_rate_asper_market", {
+                          valueAsNumber: true,
+                        })}
+                        placeholder="Current Land rate As per...."
+                      />
+                      {errors.current_land_rate_asper_market && (
+                        <p className="text-red-400 text-sm" role="alert">
+                          Please enter only number.
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Input
+                        type="text"
+                        {...register("adjustmentfactor", {
+                          valueAsNumber: true,
+                        })}
+                        placeholder="Adjustment Factor"
+                      />
+                      {errors.adjustmentfactor && (
+                        <p className="text-red-400 text-sm" role="alert">
+                          Please enter only number.
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Input
+                        type="text"
+                        {...register("fillingfactor", {
+                          valueAsNumber: true,
+                        })}
+                        placeholder="Filling Factor"
+                      />
+                      {errors.fillingfactor && (
+                        <p className="text-red-400 text-sm" role="alert">
+                          Please enter only number.
+                        </p>
+                      )}
                     </div>
                   </div>
+
                   {/* for unit  */}
-                  <div className="col-span-12">
-                    <Label>Unit</Label>
-                    <div className="grid grid-cols-12 gap-6">
-                      <div className="col-span-12 sm:col-span-6">
-                        <Select
-                          onValueChange={handleSelectCorner}
-                          {...register("cornerplot", { required: true })}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select Corner Plot" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel>Select Corner Plot</SelectLabel>
-                              <SelectItem value={"1"}>1</SelectItem>
-                              <SelectItem value={"2"}>2</SelectItem>
-                              <SelectItem value={"3"}>3</SelectItem>
-                              <SelectItem value={"4"}>4</SelectItem>
-                              <SelectItem value={"5"}>5</SelectItem>
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                        {errors.cornerplot && (
-                          <p className="text-red-400 text-sm" role="alert">
-                            {errors.cornerplot.message}
-                          </p>
-                        )}
-                      </div>
-                      <div className="col-span-12 sm:col-span-6">
-                        <Select
-                          onValueChange={handleSelectFacing}
-                          {...register("selectfacing", { required: true })}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select Facing" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel>Facing</SelectLabel>
-                              <SelectItem value="east">East</SelectItem>
-                              <SelectItem value="west">West</SelectItem>
-                              <SelectItem value="north">North</SelectItem>
-                              <SelectItem value="south">South</SelectItem>
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                        {errors.selectfacing && (
-                          <p className="text-red-400 text-sm" role="alert">
-                            {errors.selectfacing.message}
-                          </p>
-                        )}
-                      </div>
+
+                  <Label>Unit</Label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <Select
+                        onValueChange={handleSelectCorner}
+                        {...register("cornerplot", { required: true })}
+                      >
+                        <SelectTrigger className="w-[250px] sm:w-[285px]">
+                          <SelectValue placeholder="Select Corner Plot" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Select Corner Plot</SelectLabel>
+                            <SelectItem value={"1"}>1</SelectItem>
+                            <SelectItem value={"2"}>2</SelectItem>
+                            <SelectItem value={"3"}>3</SelectItem>
+                            <SelectItem value={"4"}>4</SelectItem>
+                            <SelectItem value={"5"}>5</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      {errors.cornerplot && (
+                        <p className="text-red-400 text-sm" role="alert">
+                          {errors.cornerplot.message}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Select
+                        onValueChange={handleSelectFacing}
+                        {...register("selectfacing", { required: true })}
+                      >
+                        <SelectTrigger className="w-[250px] sm:w-[285px]">
+                          <SelectValue placeholder="Select Facing" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Facing</SelectLabel>
+                            <SelectItem value="east">East</SelectItem>
+                            <SelectItem value="west">West</SelectItem>
+                            <SelectItem value="north">North</SelectItem>
+                            <SelectItem value="south">South</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      {errors.selectfacing && (
+                        <p className="text-red-400 text-sm" role="alert">
+                          {errors.selectfacing.message}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
